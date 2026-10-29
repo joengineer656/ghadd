@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Ghadd
+GenericName=Gaze Guard
+Comment=Website blocker, streak tracker and Islamic reminders
+Exec=ghadd-app
+Icon=ghadd
+Terminal=false
+Categories=Utility;
+Keywords=blocker;streak;quran;porn;habit;غض;
+StartupWMClass=ghadd-app

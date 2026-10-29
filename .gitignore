@@ -1,0 +1,6 @@
+/target
+node_modules/
+app/src-tauri/gen/
+packaging/src/
+packaging/pkg/
+packaging/*.pkg.tar.zst

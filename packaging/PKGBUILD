@@ -1,0 +1,50 @@
+# Builds Ghadd from this checkout:  cd packaging && makepkg -si
+# To publish on the AUR, replace the local copy in prepare() with a git source, e.g.
+#   source=("git+https://github.com/<you>/ghadd.git")
+pkgname=ghadd
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Website blocker with friend-password lock, streak tracker and Islamic reminders"
+arch=('x86_64')
+url=""  # set to your repository URL when you publish
+license=('MIT' 'OFL-1.1')
+depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator' 'systemd' 'networkmanager' 'e2fsprogs')
+makedepends=('cargo')
+install=ghadd.install
+backup=()
+options=('!lto' '!debug')
+
+prepare() {
+  # Copy the checkout (minus build output) so makepkg works on a clean tree.
+  rm -rf "$srcdir/ghadd"
+  mkdir -p "$srcdir/ghadd"
+  tar -C "$startdir/.." --exclude=./target --exclude=./packaging/src --exclude=./packaging/pkg \
+      --exclude=node_modules --exclude='*.pkg.tar.zst' -cf - . | tar -C "$srcdir/ghadd" -xf -
+}
+
+build() {
+  cd "$srcdir/ghadd"
+  export CARGO_TARGET_DIR=target
+  cargo build --release --locked -p ghaddd -p ghadd-cli -p ghadd-app
+}
+
+check() {
+  cd "$srcdir/ghadd"
+  cargo test --release --locked -p ghadd-core -p ghaddd
+}
+
+package() {
+  cd "$srcdir/ghadd"
+  install -Dm755 target/release/ghaddd   "$pkgdir/usr/bin/ghaddd"
+  install -Dm755 target/release/ghadd    "$pkgdir/usr/bin/ghadd"
+  install -Dm755 target/release/ghadd-app "$pkgdir/usr/bin/ghadd-app"
+  install -Dm644 packaging/ghaddd.service "$pkgdir/usr/lib/systemd/system/ghaddd.service"
+  install -Dm644 packaging/ghadd.desktop  "$pkgdir/usr/share/applications/ghadd.desktop"
+  install -Dm644 app/src-tauri/icons/128x128.png "$pkgdir/usr/share/icons/hicolor/128x128/apps/ghadd.png"
+  install -Dm644 app/src-tauri/icons/icon.png    "$pkgdir/usr/share/icons/hicolor/512x512/apps/ghadd.png"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 app/src/fonts/OFL-Amiri.txt "$pkgdir/usr/share/licenses/$pkgname/OFL-Amiri.txt"
+  install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" docs/index.html
+  install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname/img" docs/img/*.png
+  install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname/assets" docs/assets/*
+}

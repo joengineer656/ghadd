@@ -1,0 +1,12 @@
+[Unit]
+Description=Ghadd website blocker daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/ghaddd run
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+[package]
+name = "ghadd-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "ghadd"
+path = "src/main.rs"
+
+[dependencies]
+ghadd-core.workspace = true
+anyhow.workspace = true
+clap.workspace = true
+rpassword = "7"

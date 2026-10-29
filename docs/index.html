@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ghadd Guide</title>
+<meta name="description" content="How to install and use Ghadd: website blocker, streak tracker and Islamic reminders for Arch-based Linux.">
+<style>
+  @font-face { font-family: "Ghadd Quran"; src: url("assets/AmiriQuran.ttf"); }
+  @font-face { font-family: "Ghadd Naskh"; src: url("assets/Amiri-Regular.ttf"); }
+
+  :root {
+    --bg: #f4f1e8; --card: #fffdf7; --text: #1d2b27; --muted: #5f6f69; --line: #e2ddd0;
+    --accent: #1f6f5c; --gold: #9a7020; --code: #ebe6da; --warn-bg: #f7e7df; --warn: #a1402f;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1716; --card: #16211f; --text: #e6ece8; --muted: #93a39d; --line: #253330;
+      --accent: #3fae8f; --gold: #e9c46a; --code: #1e2a28; --warn-bg: #2d1c18; --warn: #e07a6a;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1716; --card: #16211f; --text: #e6ece8; --muted: #93a39d; --line: #253330;
+    --accent: #3fae8f; --gold: #e9c46a; --code: #1e2a28; --warn-bg: #2d1c18; --warn: #e07a6a;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 "Inter", "Noto Sans", system-ui, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px 64px; }
+  header.hero { padding: 48px 0 24px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+  header.hero img { width: 84px; height: 84px; border-radius: 20px; }
+  h1 { font-size: 2.3rem; margin: 0; line-height: 1.2; }
+  h1 .ar { font-family: "Ghadd Naskh", serif; color: var(--gold); font-size: 1.6rem; margin-inline-start: .4rem; font-weight: 400; }
+  .lead { color: var(--muted); margin: .3rem 0 0; font-size: 1.1rem; }
+  h2 { font-size: 1.55rem; margin: 3rem 0 .6rem; padding-top: .5rem; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.15rem; margin: 1.6rem 0 .3rem; }
+  a { color: var(--accent); }
+  code, pre { font-family: "JetBrains Mono", "CaskaydiaCove NF", ui-monospace, monospace; font-size: .88em; }
+  code { background: var(--code); padding: 1px 6px; border-radius: 5px; }
+  pre { background: var(--code); padding: 14px 16px; border-radius: 10px; overflow-x: auto; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  .ayah { font-family: "Ghadd Quran", "Ghadd Naskh", serif; direction: rtl; text-align: center; font-size: 1.8rem; line-height: 2.4; margin: 1.5rem 0 .2rem; }
+  .ayah-src { text-align: center; color: var(--gold); font-family: "Ghadd Naskh", serif; margin: 0 0 1rem; }
+  nav.toc { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 20px; }
+  nav.toc ol { margin: 0; padding-inline-start: 1.2rem; columns: 2 220px; }
+  figure { margin: 1.2rem 0; }
+  figure img { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); display: block; }
+  figure.narrow img { max-width: 440px; }
+  figcaption { color: var(--muted); font-size: .9rem; margin-top: .4rem; }
+  .steps { counter-reset: s; list-style: none; padding: 0; }
+  .steps li { counter-increment: s; position: relative; padding-inline-start: 2.6rem; margin: .9rem 0; }
+  .steps li::before { content: counter(s); position: absolute; inset-inline-start: 0; top: 0; width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--accent); color: var(--bg); display: grid; place-items: center; font-weight: 700; font-size: .9rem; }
+  table { border-collapse: collapse; width: 100%; margin: .8rem 0; display: block; overflow-x: auto; }
+  th, td { text-align: start; padding: .5rem .8rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: .9rem; }
+  .note { background: var(--card); border: 1px solid var(--line); border-inline-start: 4px solid var(--accent); padding: 12px 16px; border-radius: 10px; margin: 1rem 0; }
+  .warn { background: var(--warn-bg); border-inline-start-color: var(--warn); }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; align-items: start; }
+  .ar-block { direction: rtl; text-align: right; font-family: "Ghadd Naskh", serif; font-size: 1.2rem; line-height: 2; }
+  .theme-toggle { margin-inline-start: auto; background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 99px; padding: .4rem .9rem; cursor: pointer; font: inherit; font-size: .9rem; }
+  footer { color: var(--muted); font-size: .9rem; margin-top: 3rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <img src="assets/icon.png" alt="">
+  <div>
+    <h1>Ghadd <span class="ar">غضّ البصر</span></h1>
+    <p class="lead">User guide: install it, set it up with a friend, and use it every day.</p>
+  </div>
+  <button class="theme-toggle" id="theme" type="button">Toggle theme</button>
+</header>
+
+<p class="ayah">قُل لِّلۡمُؤۡمِنِينَ يَغُضُّواْ مِنۡ أَبۡصَٰرِهِمۡ وَيَحۡفَظُواْ فُرُوجَهُمۡۚ ذَٰلِكَ أَزۡكَىٰ لَهُمۡۚ إِنَّ ٱللَّهَ خَبِيرُۢ بِمَا يَصۡنَعُونَ ﴿٣٠﴾</p>
+<p class="ayah-src">سورة النور <bdi dir="ltr">24:30</bdi></p>
+
+<nav class="toc" aria-label="Contents">
+  <ol>
+    <li><a href="#what">What Ghadd does</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#friend">Set the friend password</a></li>
+    <li><a href="#first">First launch</a></li>
+    <li><a href="#dashboard">The dashboard</a></li>
+    <li><a href="#sos">When an urge hits: SOS</a></li>
+    <li><a href="#relapse">If you slip</a></li>
+    <li><a href="#reminders">Reminders and settings</a></li>
+    <li><a href="#blocker">The blocker</a></li>
+    <li><a href="#commands">Command reference</a></li>
+    <li><a href="#trouble">Troubleshooting</a></li>
+    <li><a href="#remove">Privacy, limits and uninstalling</a></li>
+  </ol>
+</nav>
+
+<h2 id="what">What Ghadd does</h2>
+<p>Ghadd is a free, open-source app for Arch-based Linux (built on CachyOS with KDE). It helps you quit pornography in three ways at once:</p>
+<ul>
+  <li><strong>It blocks.</strong> About 116,000 adult sites are blocked, along with an optional list of manga, webtoon, comic and anime sites. A family DNS filter catches sites missing from the lists, and SafeSearch and YouTube Restricted Mode are forced on.</li>
+  <li><strong>It locks.</strong> Only a trusted friend's password can unblock a site, pause blocking or turn it off. Blocking more never needs it.</li>
+  <li><strong>It supports you.</strong> It tracks your streak, sends reminders from the Quran and authentic hadith, and has an SOS screen for the moments that matter.</li>
+</ul>
+
+<h2 id="install">Install</h2>
+<ol class="steps">
+  <li>Build and install the package from the project folder:
+<pre><code>cd ghadd/packaging
+makepkg -si</code></pre></li>
+  <li>Start the blocker service and enable it at boot:
+<pre><code>sudo systemctl enable --now ghaddd</code></pre></li>
+  <li>Check that it's running:
+<pre><code>ghadd status</code></pre>
+  You should see <code>Blocking: ON</code> and about 116,000 blocked domains. The first list download takes a few seconds.</li>
+  <li>Open <strong>Ghadd</strong> from your app menu (search "Ghadd").</li>
+</ol>
+
+<h2 id="friend">Set the friend password</h2>
+<p>This is the most important step. Choose someone you trust: a brother, a friend or an imam. Give them the keyboard, look away, and let them run:</p>
+<pre><code>ghadd set-password</code></pre>
+<p>They type a password of at least 8 characters, twice. Don't watch them, and don't let them write it down anywhere you can find it. Only a one-way hash of it is stored, so nobody can read the password back from your computer.</p>
+<div class="note">Until a password is set, nothing can unblock, pause or disable Ghadd. That's the strict, safe default. The app's blocker card shows <strong>NOT SET</strong> in red until it's done.</div>
+
+<h2 id="first">First launch</h2>
+<div class="grid2">
+  <figure><img src="img/onboarding.png" alt="First-launch dialog asking when you last watched" loading="lazy"></figure>
+  <div>
+    <p>The first time you open Ghadd, it asks <em>when you last watched</em>. Your streak counts from that moment.</p>
+    <ul>
+      <li><strong>Starting right now</strong> begins a fresh streak.</li>
+      <li>Or pick a past date and time, then <strong>Use this date</strong>.</li>
+    </ul>
+    <p>Everything you log stays in a private database on your computer (<code>~/.local/share/io.github.ghadd/</code>). Nothing is uploaded anywhere.</p>
+  </div>
+</div>
+
+<h2 id="dashboard">The dashboard</h2>
+<figure><img src="img/dashboard.png" alt="Ghadd dashboard in light theme" loading="lazy">
+  <figcaption>The dashboard (light theme). The app follows your system theme.</figcaption></figure>
+<h3>Current streak</h3>
+<p>The big number is your clean days so far, with hours and minutes below. The bar shows progress to your next milestone: 1, 3, 7, 14, 21, 30, 40, 60, 90 days and beyond. When you reach one, you get a celebration notification.</p>
+<h3>Your numbers</h3>
+<ul>
+  <li><strong>Best streak:</strong> your longest run ever.</li>
+  <li><strong>Clean days:</strong> every day since you started that had no relapse.</li>
+  <li><strong>Urges overcome:</strong> each time you finished an SOS session with "I'm okay now".</li>
+  <li><strong>Relapses:</strong> kept honestly, because patterns help you learn.</li>
+</ul>
+<h3>The calendar</h3>
+<p>The calendar shows the last 18 weeks: green for clean days, red for relapses, and a gold dot where you resisted an urge. The outlined square is today. Hover over a square to see its date.</p>
+<figure><img src="img/dashboard-dark.png" alt="Ghadd dashboard in dark theme" loading="lazy">
+  <figcaption>The same dashboard in the dark theme.</figcaption></figure>
+
+<h2 id="sos">When an urge hits: SOS</h2>
+<div class="grid2">
+  <figure><img src="img/sos.png" alt="SOS screen with an ayah, breathing circle and dhikr counter" loading="lazy"></figure>
+  <div>
+    <p>Press <strong>SOS: I feel an urge</strong> on the dashboard, or choose it from the tray icon menu. A calm full-screen view opens with:</p>
+    <ul>
+      <li>An <strong>ayah</strong> chosen for this moment. Press <em>Another ayah</em> for more.</li>
+      <li>A <strong>10-minute timer</strong> and a breathing circle: breathe in for 4 seconds, out for 6.</li>
+      <li>A <strong>dhikr counter</strong>. Tap it to count, and every 33 it moves to the next phrase.</li>
+      <li><strong>Things to do right now:</strong> leave the room, make wudu, put the phone away, call a friend, go for a walk.</li>
+    </ul>
+    <p>An urge is a wave: it rises and then it breaks. When it has passed, press <strong>I'm okay now</strong>. That logs a win and adds a gold dot to your calendar.</p>
+  </div>
+</div>
+
+<h2 id="relapse">If you slip</h2>
+<div class="grid2">
+  <figure><img src="img/relapse.png" alt="Relapse dialog with Surah Az-Zumar 39:53" loading="lazy"></figure>
+  <div>
+    <p>Press <strong>I relapsed</strong>. Ghadd doesn't shame you: it reminds you of Allah's mercy and asks, optionally, what led to it (time, place, mood). Those notes help you spot your triggers.</p>
+    <p><strong>Log it and start again</strong> resets the current streak. Your best streak, clean days and history are all kept.</p>
+    <p>Then make wudu, pray two rak'ah, make tawbah, and begin again.</p>
+  </div>
+</div>
+
+<h2 id="reminders">Reminders and settings</h2>
+<div class="grid2">
+  <figure class="narrow"><img src="img/reading.png" alt="Reminder card showing a hadith in Arabic" loading="lazy"></figure>
+  <div>
+    <p>The <strong>Reminder</strong> card shows a random ayah, hadith or short reminder. Use the <span class="ar-block" style="display:inline">آية · حديث · تذكير</span> buttons to choose another of that kind.</p>
+    <p>The same content arrives as desktop notifications. Every hadith shows its book and its standard number (for example صحيح مسلم 2822), so you can look it up.</p>
+  </div>
+</div>
+<h3>Settings card</h3>
+<table>
+  <tr><th>Setting</th><th>What it does</th></tr>
+  <tr><td>Reminder notifications</td><td>Turns notifications on or off.</td></tr>
+  <tr><td>Every …</td><td>How often a reminder comes: from 30 minutes to 6 hours. The default is 2 hours.</td></tr>
+  <tr><td>Quiet from … to …</td><td>No reminders during these hours. The default is 23:00–07:00.</td></tr>
+  <tr><td>Start Ghadd when I log in</td><td>Ghadd starts quietly in the tray at login. Recommended.</td></tr>
+  <tr><td>Send a reminder now</td><td>Sends one notification right away, to test it.</td></tr>
+</table>
+<div class="note">Closing the window doesn't quit Ghadd. It keeps running in the system tray so reminders keep coming. To quit, use the tray menu's <em>Quit</em>. The blocker stays on even when the app is closed, because it's a separate system service.</div>
+
+<h2 id="blocker">The blocker</h2>
+<p>The <strong>Website blocker</strong> card shows whether blocking is on, how many sites are blocked, whether the friend password is set, and any tamper attempts.</p>
+<h3>What gets blocked</h3>
+<ul>
+  <li><strong>Adult sites:</strong> the StevenBlack porn list plus the Anti-Porn HOSTS list, updated every week.</li>
+  <li><strong>Everything else adult:</strong> caught by Cloudflare's family DNS (1.1.1.3).</li>
+  <li><strong>Search and video:</strong> SafeSearch is forced on Google, Bing and DuckDuckGo, and Restricted Mode on YouTube.</li>
+  <li><strong>Browser bypasses:</strong> "Secure DNS" is turned off in Firefox and Brave, and Brave's Tor windows are disabled.</li>
+</ul>
+<h3>Manga, webtoons, comics and anime</h3>
+<p>Tick <strong>Also block manga, webtoons, comics &amp; anime</strong> in the app, or run:</p>
+<pre><code>ghadd category on manga-anime</code></pre>
+<p>This blocks about 120 sites (244 domains, counting the www. versions): adult webtoon sites like toongod, manga and manhwa readers, Arabic manga and anime sites, anime streaming, and anime art boards. Turning it <em>off</em> needs the friend password. Because pirate sites change their domains often, add any new ones you find yourself (see below).</p>
+<h3>Block another site</h3>
+<p>Type it into the box on the blocker card and press <strong>Block</strong>, or run <code>ghadd add example.com</code>. This never needs a password, and the <code>www.</code> version is blocked too.</p>
+<h3>Tamper protection</h3>
+<p>Every 30 seconds Ghadd checks its files: the hosts file, the DNS settings and the browser policies. If anything was edited or deleted, it puts it back and records the attempt. You can see the record in the app or with <code>ghadd tamper-log</code>.</p>
+
+<h2 id="commands">Command reference</h2>
+<table>
+  <tr><th>Command</th><th>What it does</th><th>Friend password?</th></tr>
+  <tr><td><code>ghadd status</code></td><td>Shows whether blocking is on, the counts and the password state</td><td>No</td></tr>
+  <tr><td><code>ghadd add &lt;site&gt;</code></td><td>Blocks another site</td><td>No</td></tr>
+  <tr><td><code>ghadd category</code></td><td>Lists categories and whether they're on</td><td>No</td></tr>
+  <tr><td><code>ghadd category on manga-anime</code></td><td>Blocks manga, webtoons, comics and anime</td><td>No</td></tr>
+  <tr><td><code>ghadd category off manga-anime</code></td><td>Stops blocking that category</td><td>Yes</td></tr>
+  <tr><td><code>ghadd remove &lt;site&gt;</code></td><td>Unblocks one site, for example a false positive</td><td>Yes</td></tr>
+  <tr><td><code>ghadd pause &lt;minutes&gt;</code></td><td>Pauses everything for up to 24 hours, then turns back on by itself</td><td>Yes</td></tr>
+  <tr><td><code>ghadd resume</code></td><td>Ends a pause early</td><td>No</td></tr>
+  <tr><td><code>ghadd disable</code> / <code>ghadd enable</code></td><td>Turns blocking off until enabled / turns it back on</td><td>Yes / No</td></tr>
+  <tr><td><code>ghadd set-password</code></td><td>Sets the friend password, or changes it (needs the old one)</td><td>To change it</td></tr>
+  <tr><td><code>ghadd update-lists</code></td><td>Downloads the latest blocklists now</td><td>No</td></tr>
+  <tr><td><code>ghadd tamper-log</code></td><td>Shows every tamper attempt</td><td>No</td></tr>
+</table>
+
+<h2 id="trouble">Troubleshooting</h2>
+<h3>Is the DNS filter really working?</h3>
+<pre><code>resolvectl dns                 # wlan0 should show no server of its own
+dig +short www.google.com      # should print 216.239.38.120 (SafeSearch)</code></pre>
+<p>If a network interface still shows your router's DNS (for example 192.168.100.1), wait 30 seconds; the watchdog resets it. If it doesn't, run <code>sudo systemctl restart ghaddd</code>.</p>
+<h3>The app says "Blocker not running"</h3>
+<pre><code>sudo systemctl enable --now ghaddd
+journalctl -u ghaddd -n 30</code></pre>
+<h3>A normal site is blocked</h3>
+<p>Ask your friend to type the password for <code>ghadd remove &lt;site&gt;</code>. If it's blocked by the family DNS rather than the lists, a short <code>ghadd pause 10</code> lets you through.</p>
+<h3>Arabic letters and marks look broken</h3>
+<p>Ghadd ships its own Arabic fonts (Amiri and Amiri Quran), so harakat sit correctly whatever your system language or fonts. If you still see broken text, update to the latest version.</p>
+<h3>No notifications</h3>
+<p>Check that <em>Reminder notifications</em> is ticked and that you're not inside your quiet hours, then press <em>Send a reminder now</em>. In KDE, also check System Settings → Notifications → Applications → Ghadd.</p>
+
+<h2 id="remove">Privacy, limits and uninstalling</h2>
+<ul>
+  <li><strong>Privacy:</strong> no accounts and no tracking. Your journal never leaves your computer.</li>
+  <li><strong>An honest limit:</strong> anyone with <code>sudo</code> can eventually get around any blocker on their own computer. Ghadd makes that slow, deliberate and recorded, so a weak moment has time to pass. For extra strength, set the family DNS (1.1.1.3) on your home router too, and let your friend keep the router password.</li>
+  <li><strong>Uninstalling:</strong> <code>sudo pacman -R ghadd</code> undoes every system change (hosts file, DNS, browser policies) and restores any file it replaced.</li>
+</ul>
+
+<h2 id="ar">دليل سريع بالعربية</h2>
+<div class="ar-block">
+  <p>١. ثبّت التطبيق: <code dir="ltr">cd ghadd/packaging &amp;&amp; makepkg -si</code> ثم <code dir="ltr">sudo systemctl enable --now ghaddd</code></p>
+  <p>٢. اطلب من صديق تثق به أن يكتب كلمة السرّ بالأمر <code dir="ltr">ghadd set-password</code> دون أن تنظر.</p>
+  <p>٣. افتح «Ghadd» من قائمة التطبيقات، وحدّد متى كانت آخر مرة، فيبدأ عدّ الأيام.</p>
+  <p>٤. عند الرغبة اضغط زر <strong>SOS</strong>: آية، وتنفّس عشر دقائق، وأذكار، ثم «I'm okay now».</p>
+  <p>٥. إن سقطت فاضغط «I relapsed»، ثم توضّأ وصلِّ ركعتين وجدّد التوبة. تاريخك محفوظ لا يُمحى.</p>
+  <p>٦. لحجب مواقع المانجا والويبتون والأنمي: فعّل الخيار في بطاقة الحجب، أو نفّذ <code dir="ltr">ghadd category on manga-anime</code></p>
+</div>
+
+<footer>
+  <p>Ghadd is MIT-licensed. Quran text: <a href="https://github.com/risan/quran-json">quran-json</a> (The Noble Qur'an Encyclopedia). Hadith: <a href="https://github.com/fawazahmed0/hadith-api">hadith-api</a>. Fonts: <a href="https://github.com/aliftype/amiri">Amiri</a> (SIL OFL). Blocklists: <a href="https://github.com/StevenBlack/hosts">StevenBlack/hosts</a> and <a href="https://github.com/4skinSkywalker/Anti-Porn-HOSTS-File">Anti-Porn HOSTS File</a>.</p>
+  <p>Screenshots are made with <code>python3 docs/shots/render.py</code> using sample data.</p>
+</footer>
+</div>
+<script>
+  document.getElementById("theme").onclick = () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+  };
+</script>
+</body>
+</html>

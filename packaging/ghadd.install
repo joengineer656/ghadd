@@ -1,0 +1,25 @@
+post_install() {
+  cat <<'EOF'
+==> Ghadd installed. To start blocking:
+      sudo systemctl enable --now ghaddd
+==> Then let a trusted friend set the password (don't watch them type it):
+      ghadd set-password
+==> Open "Ghadd" from your app menu for the streak tracker and reminders.
+EOF
+}
+
+post_upgrade() {
+  systemctl daemon-reload
+  systemctl try-restart ghaddd.service
+}
+
+pre_remove() {
+  # Leave the system as we found it: unlock /etc/hosts, drop the DNS and browser settings.
+  systemctl disable --now ghaddd.service 2>/dev/null
+  /usr/bin/ghaddd cleanup || echo "warning: ghaddd cleanup failed; check /etc/hosts and /etc/NetworkManager/conf.d/ghadd.conf"
+}
+
+post_remove() {
+  systemctl daemon-reload
+  echo "==> Ghadd's saved state is kept in /var/lib/ghadd and /etc/ghadd; delete them to forget everything."
+}

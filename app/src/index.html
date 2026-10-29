@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ghadd</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="icon.png" alt="" width="36" height="36">
+      <div>
+        <h1>Ghadd <span class="ar">غضّ البصر</span></h1>
+        <p class="muted">Guard your gaze, one day at a time</p>
+      </div>
+    </div>
+    <span id="blocker-pill" class="pill">Blocker …</span>
+  </header>
+
+  <main class="grid">
+    <section class="card hero">
+      <p class="label">Current streak</p>
+      <div class="streak"><span id="streak-days">0</span><span class="unit" id="streak-unit">days</span></div>
+      <p class="muted" id="streak-time">0 h 0 m</p>
+      <div class="milestone">
+        <div class="bar"><div id="milestone-fill"></div></div>
+        <p class="muted small" id="milestone-text"></p>
+      </div>
+      <div class="actions">
+        <button id="sos-btn" class="btn sos">SOS: I feel an urge</button>
+        <button id="relapse-btn" class="btn ghost">I relapsed</button>
+      </div>
+    </section>
+
+    <section class="card stats">
+      <div><span id="stat-best">0</span><p>Best streak (days)</p></div>
+      <div><span id="stat-clean">0</span><p>Clean days</p></div>
+      <div><span id="stat-urges">0</span><p>Urges overcome</p></div>
+      <div><span id="stat-relapses">0</span><p>Relapses</p></div>
+    </section>
+
+    <section class="card reading">
+      <div class="card-head">
+        <p class="label">Reminder</p>
+        <div class="seg">
+          <button data-kind="quran">آية</button>
+          <button data-kind="hadith">حديث</button>
+          <button data-kind="reminder">تذكير</button>
+        </div>
+      </div>
+      <p id="reading-text" class="ar big"></p>
+      <p id="reading-source" class="ar source"></p>
+    </section>
+
+    <section class="card calendar">
+      <div class="card-head">
+        <p class="label">Last 18 weeks</p>
+        <div class="legend">
+          <span><i class="cell clean"></i>clean</span>
+          <span><i class="cell relapse"></i>relapse</span>
+          <span><i class="cell clean urge"></i>urge resisted</span>
+        </div>
+      </div>
+      <div id="cal" class="cal"></div>
+    </section>
+
+    <section class="card blocker">
+      <p class="label">Website blocker</p>
+      <div id="blocker-body" class="muted">Checking…</div>
+      <label class="check"><input type="checkbox" id="cat-manga"> Also block manga, webtoons, comics &amp; anime</label>
+      <p id="cat-msg" class="small muted"></p>
+      <form id="add-form" class="row">
+        <input id="add-domain" placeholder="Block another site, e.g. example.com" autocomplete="off">
+        <button class="btn small">Block</button>
+      </form>
+      <p id="add-msg" class="small muted"></p>
+      <p class="small muted">Unblocking or pausing needs your friend's password:
+        <code>ghadd remove &lt;site&gt;</code>, <code>ghadd pause &lt;minutes&gt;</code>.</p>
+    </section>
+
+    <section class="card settings">
+      <p class="label">Settings</p>
+      <label class="check"><input type="checkbox" id="set-reminders"> Reminder notifications</label>
+      <label class="field">Every
+        <select id="set-interval">
+          <option value="30">30 minutes</option><option value="60">hour</option>
+          <option value="120">2 hours</option><option value="180">3 hours</option>
+          <option value="240">4 hours</option><option value="360">6 hours</option>
+        </select>
+      </label>
+      <label class="field">Quiet from <select id="set-quiet-start"></select> to <select id="set-quiet-end"></select></label>
+      <label class="check"><input type="checkbox" id="set-autostart"> Start Ghadd when I log in</label>
+      <button id="test-notif" class="btn ghost small">Send a reminder now</button>
+    </section>
+  </main>
+
+  <!-- First run -->
+  <div id="onboard" class="overlay" hidden>
+    <div class="modal">
+      <h2>السلام عليكم</h2>
+      <p>This is a private journal: nothing leaves your computer.</p>
+      <p>When did you last watch? Your streak starts from then.</p>
+      <input type="datetime-local" id="onboard-date">
+      <div class="actions">
+        <button id="onboard-now" class="btn">Starting right now</button>
+        <button id="onboard-save" class="btn ghost">Use this date</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Relapse -->
+  <div id="relapse" class="overlay" hidden>
+    <div class="modal">
+      <h2>It's okay. Get back up.</h2>
+      <p>A slip doesn't erase your progress, and your history stays. Make wudu, pray two rak'ah,
+        ask Allah for forgiveness, and begin again. He loves those who turn back to Him.</p>
+      <p id="relapse-ayah" class="ar big quran"></p>
+      <p id="relapse-ayah-src" class="ar source"></p>
+      <textarea id="relapse-note" rows="2" placeholder="What led to it? (optional, helps you spot patterns: time, place, mood)"></textarea>
+      <div class="actions">
+        <button id="relapse-confirm" class="btn">Log it and start again</button>
+        <button id="relapse-cancel" class="btn ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOS -->
+  <div id="sos" class="sos-screen" hidden>
+    <button id="sos-close" class="close" aria-label="Close">✕</button>
+    <div class="sos-inner">
+      <p class="sos-lead">The urge is a wave. It rises, then it breaks. Stay with Allah for ten minutes.</p>
+      <p id="sos-ayah" class="ar huge quran"></p>
+      <p id="sos-ayah-src" class="ar source"></p>
+      <button id="sos-next" class="btn ghost small">Another ayah</button>
+
+      <div class="sos-row">
+        <div class="breath">
+          <div id="breath-circle" class="circle"><span id="breath-word">Breathe in</span></div>
+          <p id="sos-timer" class="timer">10:00</p>
+        </div>
+        <div class="dhikr">
+          <button id="dhikr-btn" class="dhikr-btn"><span id="dhikr-text" class="ar"></span><span id="dhikr-count">0</span></button>
+          <p class="small muted">Tap to count · 33 each</p>
+        </div>
+      </div>
+
+      <ul class="todo">
+        <li>Stand up and leave the room</li>
+        <li>Make wudu and pray two rak'ah</li>
+        <li>Put the phone in another room</li>
+        <li>Call or message a friend</li>
+        <li>Go for a walk, or do 20 push-ups</li>
+      </ul>
+      <button id="sos-done" class="btn">I'm okay now, الحمد لله</button>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
