@@ -2,6 +2,8 @@
 
 **قُل لِّلْمُؤْمِنِينَ يَغُضُّوا مِنْ أَبْصَارِهِمْ وَيَحْفَظُوا فُرُوجَهُمْ ۚ ذَٰلِكَ أَزْكَىٰ لَهُمْ ۗ إِنَّ اللَّهَ خَبِيرٌ بِمَا يَصْنَعُونَ (30)**
 
+<img width="1100" height="1256" alt="image" src="https://github.com/user-attachments/assets/481359ae-52d8-4bb6-94bd-4611a9928158" />
+
 **Guard your gaze, one day at a time.** An open-source app for Arch-based Linux (made on CachyOS) that helps Muslims quit pornography:
 
 - 🛡️ **System-wide blocker.** About 116,000 adult sites are blocked in `/etc/hosts`, and a family DNS filter (Cloudflare 1.1.1.3) catches the rest.
